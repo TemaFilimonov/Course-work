@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:social="http://spring.io/springsocial"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorator="layout">
+	<head>
+		<title>SIGN UP</title>
+		<link rel="stylesheet" th:href="@{/resources/css/common.css}" type="text/css" media="screen"></link>
+		<link rel="stylesheet" th:href="@{/resources/css/bootstrap.css}" type="text/css" media="screen"></link>
+		<!--link rel="stylesheet" th:href="@{/resources/page.css}" type="text/css" media="screen"></link>
+		<link rel="stylesheet" th:href="@{/resources/form.css}" type="text/css" media="screen"></link>
+		<link rel="stylesheet" th:href="@{/resources/messages/messages.css}" type="text/css" media="screen"></link-->
+		<style type="text/css">
+		.btn-lg{
+		margin-top: 15px;
+		}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+		<div id="content" layout:fragment="content">
+			<nav class="navbar navbar-inverse">
+				<form id="signin" th:action="@{/signin/authenticate}" method="post" class="navbar-form navbar-right">
+					<input type="hidden" name="_csrf" th:value="${_csrf.token}"></input>
+					<div class="formInfo">
+						<div class="error" th:if="${param.error eq 'bad_credentials'}">
+							Your sign in information was incorrect.
+							Please try again or <a th:href="@{/signup}">sign up</a>.
+						</div>
+						<div class="error" th:if="${param.error eq 'multiple_users'}">
+							Multiple local accounts are connected to the provider account.
+							Try again with a different provider or with your username and password.
+						</div>
+					</div>
+
+					<!--label for="login">Username</label-->
+					<input id="login" name="username" type="text" class="form-control"
+						   placeholder="Username" autofocus="true"></input>
+					<input id="password" name="password" type="password" class="form-control" placeholder="Password"></input>
+					<button class="btn btn-small btn-success" type="submit">Log In</button>
+
+					<a class="btn btn-small btn-primary"  th:href="@{/signup}">Sign Up</a>
+				</form>
+
+
+				<!-- TWETTER SIGNIN -->
+				<form name="tw_signin" id="tw_signin" th:action="@{/signin/twitter}" method="POST" class="navbar-form navbar-right">
+					<input type="hidden" name="_csrf" th:value="${_csrf.token}"></input>
+					<button type="submit" class="btn btn-link" ><img th:src="@{/resources/social/twitter.png}"></img></button>
+				</form>
+
+				<!-- FACEBOOK SIGNIN -->
+				<form name="fb_signin" id="fb_signin" th:action="@{/signin/facebook}" method="POST" class="navbar-form navbar-right">
+					<input type="hidden" name="_csrf" th:value="${_csrf.token}"></input>
+					<input type="hidden" name="scope" value="email,user_about_me,public_profile,publish_actions"></input>
+					<button type="submit" class="btn btn-link" ><img th:src="@{/resources/social/facebook.png}"></img></button>
+				</form>
+
+				<!-- VKONTAKTE SIGNIN -->
+				<form name="vk_signin" id="vk_signin" th:action="@{/signin/vkontakte}" method="POST" class="navbar-form navbar-right">
+					<input type="hidden" name="_csrf" th:value="${_csrf.token}"></input>
+					<input type="hidden" name="scope" value="notify,notes,pages" />
+					<button type="submit" class="btn btn-link" ><img th:src="@{/resources/social/vk.png}"></img></button>
+				</form>
+
+			</nav>
+
+
+			<div th:if="${!#strings.isEmpty(message)}"
+				 th:class="${message.type.cssClass}" 
+				 th:text="${message.text}">error message text</div>
+			
+			<form class="form-signin" id="signup" th:action="@{/signup}" method="post" th:object="${signupForm}">
+				<input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+				<div class="formInfo">
+					<div class="error" th:if="${#fields.hasErrors('*')}">Unable to sign up. Please fix the errors below and resubmit.</div>
+				</div>
+				
+
+					<label for="firstName">First Name <span th:if="${#fields.hasErrors('firstName')}" class="error" th:text="${#fields.errors('firstName')[0]}">Error</span></label>
+					<input class="form-control" type="text" th:field="*{firstName}" />
+					<label for="lastName">Last Name <span th:if="${#fields.hasErrors('lastName')}" class="error" th:text="${#fields.errors('lastName')[0]}">Error</span></label>
+					<input class="form-control" type="text" th:field="*{lastName}" />
+					<label for="username">Username <span th:if="${#fields.hasErrors('username')}" class="error" th:text="${#fields.errors('username')[0]}">Error</span></label>
+					<input class="form-control" type="text" th:field="*{username}" />
+					<label for="password">Password<span th:if="${#fields.hasErrors('password')}" class="error" th:text="${#fields.errors('password')[0]}">Error</span></label>
+					<input class="form-control" type="password" th:field="*{password}" />
+
+				<p><button class="btn btn-lg btn-primary" type="submit">Sign Up</button></p>
+			</form>
+		</div>
+		</div>
+	</body>
+</html>
+
